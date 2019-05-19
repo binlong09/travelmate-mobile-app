@@ -49,6 +49,21 @@ export default class SignupScreen extends Component {
           </Text>
         </View>
         <Input
+          placeholder='Name'
+          leftIcon={
+            <Icon
+              name='account'
+              size={25}
+              color='#92A1B1'
+            />
+          }
+          color='white'
+          containerStyle={styles.inputStyle}
+          inputStyle={{color: '#2A3C4E'}}
+          leftIconContainerStyle={styles.leftIconContainerStyle}
+        >
+        </Input>
+        <Input
           placeholder='Email'
           leftIcon={
             <Icon
@@ -79,26 +94,10 @@ export default class SignupScreen extends Component {
           leftIconContainerStyle={styles.leftIconContainerStyle}
         >
         </Input>
-        <Input
-          placeholder='Retype Password'
-          secureTextEntry={true}
-          leftIcon={
-            <Icon
-              name='lock-outline'
-              size={25}
-              color='#92A1B1'
-            />
-          }
-          color='white'
-          containerStyle={styles.inputStyle}
-          inputStyle={{color: '#2A3C4E'}}
-          leftIconContainerStyle={styles.leftIconContainerStyle}
-        >
-        </Input>
         {this.state.success ?
           <View style={{paddingTop: 10, alignItems: 'center'}}>
             <Text style={styles.successUpperText}>
-              Success! Please check your email for activation email.
+              Success! Please check your email for activation link.
             </Text>
             <Text style={styles.successBottomText} onPress={this.onSignin}>
               Then sign in

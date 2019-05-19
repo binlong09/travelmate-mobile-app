@@ -21,7 +21,7 @@ export default class WelcomeScreen extends Component {
           <Text
             style={styles.welcomeText}
           >
-            TRAVELLING{"\n"}
+            TRAVEL{"\n"}
             MADE{"\n"}
             EASY{"\n"}
           </Text>
