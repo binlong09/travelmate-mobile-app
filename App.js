@@ -7,6 +7,8 @@ import {
 } from 'react-navigation';
 // import { Provider } from 'react-redux';
 import { Icon } from 'react-native-elements';
+import store from './store';
+import { Provider } from 'react-redux';
 
 // import store from './store';
 import WelcomeScreen from './screens/WelcomeScreen';
@@ -57,11 +59,11 @@ export default class App extends React.Component {
     const Navigation = createAppContainer(MainNavigator)
 
     return (
-      // <Provider store={store}>
+      <Provider store={store}>
         <View style={styles.container}>
           <Navigation />
         </View>
-      // </Provider>
+      </Provider>
     );
   }
 }

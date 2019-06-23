@@ -1,18 +1,44 @@
 import React, { Component } from 'react'
-import { Text, View, Image } from 'react-native';
+import { Text, View, Image, ActivityIndicator } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { LinearGradient } from 'expo';
+import axios from 'axios';
+import { connect } from 'react-redux';
+import { signup } from '../../actions/auth_actions';
 
-export default class SignupScreen extends Component {
-  state = {
-    success: false
+class SignupScreen extends Component {
+  constructor(props) {
+    super(props);
+    this.state = this.getInitialState();
   }
 
-  onSignup = () => {
+  getInitialState = () => {
+    const initialState = {
+      success: false,
+      error: '',
+      loading: false,
+      username: '',
+      email: '',
+      password: ''
+    }
+    return initialState;
+  }
+
+  resetState = () => {
+    this.setState(this.getInitialState);
+  }
+
+   onSignup = async () => {
     this.setState({
-      success: true
+      error: '',
+      loading: true
     })
+
+    const { email, username, password } = this.state;
+
+    await this.props.signup({username, email, password});
+    this.props.navigation.navigate('auth')
   }
 
   onSignin = (dispatch) => {
@@ -28,10 +54,15 @@ export default class SignupScreen extends Component {
 
 
   render() {
+    const { isLoading } = this.props;
+
     return (
       <LinearGradient
         colors={['#304768','#374A6A','#3C4D6C','#3F4E6D','#414E6D','#465170']}
         style={styles.container}>
+        {isLoading ?
+          <ActivityIndicator size="large" color="#0000ff" /> : null
+        }
         <Image
           source={require('../../assets/logoFull.png')}
           style={styles.logo}
@@ -49,7 +80,7 @@ export default class SignupScreen extends Component {
           </Text>
         </View>
         <Input
-          placeholder='Name'
+          placeholder='Username'
           leftIcon={
             <Icon
               name='account'
@@ -61,6 +92,7 @@ export default class SignupScreen extends Component {
           containerStyle={styles.inputStyle}
           inputStyle={{color: '#2A3C4E'}}
           leftIconContainerStyle={styles.leftIconContainerStyle}
+          onChangeText={username => this.setState({ username })}
         >
         </Input>
         <Input
@@ -76,10 +108,11 @@ export default class SignupScreen extends Component {
           containerStyle={styles.inputStyle}
           inputStyle={{color: '#2A3C4E'}}
           leftIconContainerStyle={styles.leftIconContainerStyle}
+          onChangeText={email => this.setState({ email })}
         >
         </Input>
         <Input
-          placeholder='Password'
+          placeholder='Password'f
           secureTextEntry={true}
           leftIcon={
             <Icon
@@ -92,6 +125,7 @@ export default class SignupScreen extends Component {
           containerStyle={styles.inputStyle}
           inputStyle={{color: '#2A3C4E'}}
           leftIconContainerStyle={styles.leftIconContainerStyle}
+          onChangeText={password => this.setState({ password })}
         >
         </Input>
         {this.state.success ?
@@ -187,3 +221,11 @@ const styles = {
     fontSize: 12
   }
 }
+
+const mapStateToProps = state => ({
+  auth: state.auth
+})
+
+export default connect(mapStateToProps, {
+  signup
+})(SignupScreen);

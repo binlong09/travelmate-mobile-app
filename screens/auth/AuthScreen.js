@@ -3,11 +3,28 @@ import { Text, View, Image } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { LinearGradient } from 'expo';
+import axios from 'axios';
+import auth_reducer from '../../reducers/auth_reducer';
+import { connect } from 'react-redux';
 
-export default class AuthScreen extends Component {
+class AuthScreen extends Component {
   constructor(props) {
     super(props)
     this.state = this.getInitialState();
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    const { signedup } = this.props;
+
+    console.log(this.prop)
+    console.log(nextProps)
+
+    if(nextProps.signedup !== signedup) {
+      console.log("must update")
+      return true;
+    }
+
+    return false;
   }
 
   getInitialState = () => {
@@ -55,6 +72,8 @@ export default class AuthScreen extends Component {
   }
 
   render() {
+    const { signedup } = this.props;
+
     return (
       <LinearGradient
         colors={['#304768','#374A6A','#3C4D6C','#3F4E6D','#414E6D','#465170']}
@@ -118,6 +137,10 @@ export default class AuthScreen extends Component {
             Please fill out your password
           </Text> : null
         }
+        {signedup ?
+          <Text style={{color: 'green', paddingTop: 10, fontStyle: 'italic'}}>
+            Successfully signed up, please login!
+          </Text> : null}
         <Button
             containerStyle={styles.loginButtonStyle}
             title="Log In"
@@ -194,3 +217,9 @@ const styles = {
     fontSize: 12
   }
 }
+
+const mapStateToProps = state => ({
+  auth: state.auth
+})
+
+export default connect(mapStateToProps, {})(AuthScreen)
