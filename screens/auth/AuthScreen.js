@@ -13,20 +13,6 @@ class AuthScreen extends Component {
     this.state = this.getInitialState();
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    const { signedup } = this.props;
-
-    console.log(this.prop)
-    console.log(nextProps)
-
-    if(nextProps.signedup !== signedup) {
-      console.log("must update")
-      return true;
-    }
-
-    return false;
-  }
-
   getInitialState = () => {
     const initialState = {
       emailInput: '',

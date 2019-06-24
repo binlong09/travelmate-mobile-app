@@ -3,17 +3,18 @@ import {
   LOGIN_FAIL,
   LOADING,
   SIGNUP_SUCCESS,
-  SIGNUP
+  SPINNER
 } from '../actions/types';
 import deviceStorage from '../services/deviceStorage';
 
 const initialState = {
-  // token: AsyncStorage.getItem('token'),
   isLoading: false,
-  signedup: false
+  signedup: false,
+  isAuthenticated: false
 }
 
 export default function(state = initialState, action) {
+  console.log(action)
   switch(action.type) {
     case LOADING:
       return {
@@ -30,11 +31,6 @@ export default function(state = initialState, action) {
           ...state,
           isLoading: false,
           signedup: true
-        }
-      case SIGNUP:
-        return {
-          ...state,
-          isLoading: true
         }
       default:
         return initialState;

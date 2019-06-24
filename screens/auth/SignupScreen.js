@@ -38,10 +38,9 @@ class SignupScreen extends Component {
     const { email, username, password } = this.state;
 
     await this.props.signup({username, email, password});
-    this.props.navigation.navigate('auth')
   }
 
-  onSignin = (dispatch) => {
+  onSignin = () => {
     this.setState({
       success: false
     })
@@ -52,17 +51,31 @@ class SignupScreen extends Component {
     this.props.navigation.navigate('forgot');
   }
 
+  renderButton() {
+    const { isLoading } = this.props.auth;
+
+    if(isLoading) {
+      return <ActivityIndicator size="large" color='red' />
+    }
+    return (
+      <Button
+          containerStyle={styles.signupButtonStyle}
+          title="Sign Up"
+          buttonStyle={{backgroundColor: "#FF9F1C"}}
+          titleStyle={{fontWeight: 'bold', fontSize: 16}}
+          onPress={this.onSignup}
+        />
+    )
+  }
 
   render() {
-    const { isLoading } = this.props;
+    const { isLoading, signedup } = this.props.auth;
+    const { msg } = this.props.error;
 
     return (
       <LinearGradient
         colors={['#304768','#374A6A','#3C4D6C','#3F4E6D','#414E6D','#465170']}
         style={styles.container}>
-        {isLoading ?
-          <ActivityIndicator size="large" color="#0000ff" /> : null
-        }
         <Image
           source={require('../../assets/logoFull.png')}
           style={styles.logo}
@@ -128,7 +141,15 @@ class SignupScreen extends Component {
           onChangeText={password => this.setState({ password })}
         >
         </Input>
-        {this.state.success ?
+        <View style={{paddingTop: 10, alignItems: 'center'}}>
+          {msg.errors !== undefined ? msg.errors.map((err, i) =>
+            <Text style={{color: 'red'}} key={i}>
+              {err}
+            </Text>
+          ) : null}
+
+        </View>
+        {signedup ?
           <View style={{paddingTop: 10, alignItems: 'center'}}>
             <Text style={styles.successUpperText}>
               Success! Please check your email for activation link.
@@ -136,14 +157,7 @@ class SignupScreen extends Component {
             <Text style={styles.successBottomText} onPress={this.onSignin}>
               Then sign in
             </Text>
-          </View> :
-          <Button
-          containerStyle={styles.signupButtonStyle}
-          title="Sign Up"
-          buttonStyle={{backgroundColor: "#FF9F1C"}}
-          titleStyle={{fontWeight: 'bold', fontSize: 16}}
-          onPress={this.onSignup}
-        />
+          </View> : this.renderButton()
         }
         <View style={{alignItems: 'center', marginTop: 70}}>
           <Text
@@ -223,7 +237,8 @@ const styles = {
 }
 
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: state.auth,
+  error: state.error
 })
 
 export default connect(mapStateToProps, {

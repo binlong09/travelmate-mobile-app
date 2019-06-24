@@ -1,34 +1,33 @@
 import { AsyncStorage } from 'react-native';
+import { returnErrors } from './errorActions'
 import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   SIGNUP_SUCCESS,
   SIGNUP_FAIL,
-  SIGNUP
+  LOADING
 } from './types';
 import { NavigationActions } from 'react-navigation';
 import client from '../services/client'
 
 export const signup = ({ username, email, password }) => dispatch => {
   dispatch({
-    type: SIGNUP
+    type: LOADING
   })
 
-  // const config = {
+  config = {}
 
-  // }
+  const body = JSON.stringify({ username, email, password });
 
-  // const body = JSON.stringify({ username, email, password });
-
-  // client.post('/users', body, config)
-  //   .then(res => dispatch({
-  //     type: SIGNUP_SUCCESS,
-  //     payload: res.data
-  //   }))
-  //   .catch(err => {
-  //     dispatch(returnErrors(err.response.data, err.response.status, 'REGISTER_FAIL'));
-  //     dispatch({
-  //       type: REGISTER_FAIL
-  //     })
-  //   })
+  return client.post('/users', body, config)
+    .then(res => dispatch({
+      type: SIGNUP_SUCCESS,
+      payload: res.data
+    }))
+    .catch(err => {
+      dispatch(returnErrors(err.response.data, err.response.status, 'REGISTER_FAIL'));
+      dispatch({
+        type: SIGNUP_FAIL
+      })
+    })
 }
